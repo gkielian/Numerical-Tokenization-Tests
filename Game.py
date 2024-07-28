@@ -27,4 +27,5 @@ class Game:
         self.guest_team = Team(event['visitor']['teamid'])
 
     def start(self):
-        self.event.show()
+        self.event.save_ascii_art('game_ascii_art.txt')
+
