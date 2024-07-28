@@ -3,7 +3,6 @@ from Constant import Constant
 from Moment import Moment
 from Team import Team
 
-
 class Event:
     """A class for handling and showing events"""
 
@@ -30,7 +29,7 @@ class Event:
         court = np.full((y_bins, x_bins), '#')
         for i, player in enumerate(moment.players):
             x_bin, y_bin = self.bin_locations(player.x, player.y, Constant.X_MIN, Constant.X_MAX, Constant.Y_MIN, Constant.Y_MAX, x_bins, y_bins)
-            symbol = str(i) if i < 5 else str(i - 5)
+            symbol = str(i) if i < 5 else str(i - 5 + 5)  # Ensure the home team is 0-4, away team is 5-9
             court[y_bin, x_bin] = symbol
 
         ball_x_bin, ball_y_bin = self.bin_locations(moment.ball.x, moment.ball.y, Constant.X_MIN, Constant.X_MAX, Constant.Y_MIN, Constant.Y_MAX, x_bins, y_bins)
@@ -38,7 +37,7 @@ class Event:
 
         return "\n".join("".join(row) for row in court)
 
-    def save_ascii_art(self, file_path, x_bins=50, y_bins=25):
+    def save_ascii_art(self, file_path, x_bins=200, y_bins=50):
         with open(file_path, 'w') as file:
             for i, moment in enumerate(self.moments):
                 ascii_frame = self.generate_ascii_frame(moment, x_bins, y_bins)
