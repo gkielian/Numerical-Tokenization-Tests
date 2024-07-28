@@ -25,6 +25,8 @@ class Game:
         self.home_team = Team(event['home']['teamid'])
         self.guest_team = Team(event['visitor']['teamid'])
 
-    def start(self):
+    def start(self, create_gif=False):
         self.event.save_ascii_image('game_ascii_art.txt')
+        if create_gif:
+            self.event.save_gif('game_animation.gif')
 

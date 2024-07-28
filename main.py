@@ -10,11 +10,13 @@ parser.add_argument('--event', type=int, default=0,
                             (the indexing start with zero, if you index goes beyond out
                             the total number of events (plays), it will show you the last
                             one of the game)""")
+parser.add_argument('--gif', action='store_true',
+                    help='Create a GIF of the event')
 
 args = parser.parse_args()
 
 game = Game(path_to_json=args.path, event_index=args.event)
 game.read_json()
 
-game.start()
+game.start(create_gif=args.gif)
 
