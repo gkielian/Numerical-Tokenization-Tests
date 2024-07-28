@@ -7,7 +7,6 @@ from Constant import Constant
 class Game:
     """A class for keeping info about the games"""
     def __init__(self, path_to_json, event_index):
-        # self.events = None
         self.home_team = None
         self.guest_team = None
         self.event = None
@@ -27,4 +26,5 @@ class Game:
         self.guest_team = Team(event['visitor']['teamid'])
 
     def start(self):
-        self.event.show()
+        self.event.save_ascii_image('game_ascii_art.txt')
+
