@@ -50,11 +50,13 @@ class Event:
         plt.close(fig)
         return image
 
-    def save_ascii_image(self, file_path):
-        with open(file_path, 'w') as file:
+    def save_event_frame(self, file_path, create_ascii=False):
+        with open(file_path, 'a') as file:
             for i in range(len(self.moments)):
-                image = self.generate_frame(i)
-                ascii_image = self.asciify_image(image)
+                ascii_image = None
+                if create_ascii:
+                    image = self.generate_frame(i)
+                    ascii_image = self.asciify_image(image)
                 moment = self.moments[i]
                 clock_text = 'Quarter {:d}, {:02d}:{:02d}, Shot Clock: {:03.1f}\n'.format(
                     moment.quarter,
@@ -73,7 +75,8 @@ class Event:
                 file.write(clock_text)
                 file.write(player_locations)
                 file.write(ball_location)
-                file.write(ascii_image + "\n\n")
+                if create_ascii:
+                    file.write(ascii_image + "\n\n")
 
     def asciify_image(self, image, width=80):
         gray_image = np.dot(image[..., :3], [0.2989, 0.587, 0.114])
