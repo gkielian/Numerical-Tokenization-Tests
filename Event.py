@@ -21,6 +21,7 @@ class Event:
         player_names = [" ".join([player['firstname'],
                         player['lastname']]) for player in players]
         player_jerseys = [player['jersey'] for player in players]
+        self.player_jerseys = player_jerseys
         values = list(zip(player_names, player_jerseys))
         # Example: 101108: ['Chris Paul', '3']
         self.player_ids_dict = dict(zip(player_ids, values))
@@ -58,23 +59,23 @@ class Event:
                     image = self.generate_frame(i)
                     ascii_image = self.asciify_image(image)
                 moment = self.moments[i]
-                clock_text = 'Quarter {:d}, {:02d}:{:02d}, Shot Clock: {:03.1f}\n'.format(
+                # quarter
+                clock_csv='Q{:d},T{:f},M{:02d},S{:02d},C{:03.1f},'.format(
                     moment.quarter,
+                    moment.game_clock,
                     int(moment.game_clock) % 3600 // 60,
                     int(moment.game_clock) % 60,
                     moment.shot_clock)
 
-                player_locations = "Player locations: " + ", ".join(
-                    f"{'H' if idx < 5 else 'A'}{idx%5}: ({player.x:.1f}, {player.y:.1f})"
-                    for idx, player in enumerate(moment.players)
-                ) + "\n"
+                player_locations_csv = ""
+                for idx, player in enumerate(moment.players):
+                    jersey_num= self.player_ids_dict[player.id][1]
+                    home_or_away = "H" if idx < 5 else "A"
+                    player_locations_csv += f"{home_or_away}{jersey_num}X{player.x:.1f}Y{player.y:.1f},"
+                ball_location_csv = f"BX{moment.ball.x:.1f},BY{moment.ball.y:.1f},BZ{moment.ball.radius:.1f}"
 
-                ball_location = f"Ball location: ({moment.ball.x:.1f}, {moment.ball.y:.1f}, {moment.ball.radius:.1f})\n"
-
-                file.write(f"Moment {i + 1}:\n")
-                file.write(clock_text)
-                file.write(player_locations)
-                file.write(ball_location)
+                # file.write(f"Moment {i + 1}:\n")
+                file.write(clock_csv + player_locations_csv + ball_location_csv + "\n")
                 if create_ascii:
                     file.write(ascii_image + "\n\n")
 
