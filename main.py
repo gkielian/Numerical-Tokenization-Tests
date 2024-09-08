@@ -36,7 +36,10 @@ last_index = game.get_last_index()
 
 # Process events with tqdm progress bar
 for i in tqdm(range(0, last_index), desc="Processing events", unit="event"):
-    game = Game(path_to_json=args.path, event_index=i, output=output_filename)
-    game.read_json()
-    game.start(create_gif=args.gif)
+    try:
+        game = Game(path_to_json=args.path, event_index=i, output=output_filename)
+        game.read_json()
+        game.start(create_gif=args.gif)
+    except Exception as e:
+        continue
 
